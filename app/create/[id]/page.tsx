@@ -66,51 +66,6 @@ function Page() {
       });
       getData();
     }
-    // if (boards?.contents) {
-    //   const { data, error, status } = await supabase
-    //     .from("todos")
-    //     .update({
-    //       contents: contents,
-    //     })
-    //     .eq("id", pathname.split("/")[2])
-    //     .select();
-
-    //   if (error) {
-    //     console.error(error);
-    //     toast.message("에러가 발생했습니다.", {
-    //       description: "콘솔 창에 출력된 에러를 확인해주세요.",
-    //     });
-    //   }
-
-    //   if (status === 200) {
-    //     toast.message("추가 완료!", {
-    //       description: "새로운 보드가 생성되었습니다.",
-    //     });
-    //     getData();
-    //   }
-    // } else {
-    //   const { data, error, status } = await supabase
-    //     .from("todos")
-    //     .insert({
-    //       contents: contents,
-    //     })
-    //     .eq("id", pathname.split("/")[2])
-    //     .select();
-
-    //   if (error) {
-    //     console.error(error);
-    //     toast.message("에러가 발생했습니다.", {
-    //       description: "콘솔 창에 출력된 에러를 확인해주세요.",
-    //     });
-    //   }
-
-    //   if (status === 201) {
-    //     toast.message("생성 완료!", {
-    //       description: "새로운 보드가 추가되었습니다.",
-    //     });
-    //     getData();
-    //   }
-    // }
   };
 
   // ADD NEW BOARD 버튼 클릭
@@ -213,7 +168,7 @@ function Page() {
         ) : (
           <div className="flex flex-col items-center justify-start w-full h-full gap-4">
             {boards?.contents.map((board: BoardContent) => {
-              return <BasicBoard key={board.boardId} />;
+              return <BasicBoard key={board.boardId} data={board} />;
             })}
           </div>
         )}

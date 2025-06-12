@@ -24,7 +24,11 @@ import { toast } from "sonner";
 import styles from "./MarkdownDialog.module.scss";
 import { BoardContent, Todo } from "@/app/create/[id]/page";
 
-function MarkdownDialog() {
+interface Props {
+  data: BoardContent;
+}
+
+function MarkdownDialog({ data }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
@@ -51,7 +55,7 @@ function MarkdownDialog() {
         todos.forEach(async (todo: Todo) => {
           if (todo.id === Number(pathname.split("/")[2])) {
             todo.contents.forEach((el: BoardContent) => {
-              if (el.boardId === "t1kDN-eKg9vTNdnWONBtA") {
+              if (el.boardId === "919ZYdzlVtPS3g5c_l7I3") {
                 el.content = content;
                 el.title = title;
                 el.startDate = startDate;
@@ -62,6 +66,7 @@ function MarkdownDialog() {
                 el.startDate = el.startDate;
                 el.endDate = el.endDate;
               }
+              console.log(el);
             });
             // Supabase 데이터베이스에 연동
             const { data, error, status } = await supabase
@@ -93,11 +98,20 @@ function MarkdownDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <span className="font-normal text-gray-400 hover:text-gray-500 cursor-pointer">
-          Add Contents
-        </span>
-      </DialogTrigger>
+      {data.title ? (
+        <DialogTrigger asChild>
+          <span className="font-normal text-gray-400 hover:text-gray-500 cursor-pointer">
+            Update Contents
+          </span>
+        </DialogTrigger>
+      ) : (
+        <DialogTrigger asChild>
+          <span className="font-normal text-gray-400 hover:text-gray-500 cursor-pointer">
+            Add Contents
+          </span>
+        </DialogTrigger>
+      )}
+
       <DialogContent className="!max-w-fit">
         <DialogHeader>
           <DialogTitle>
@@ -112,8 +126,8 @@ function MarkdownDialog() {
             </div>
           </DialogTitle>
           <div className={styles.dialog__calendarBox}>
-            <LabelCalendar label="From" />
-            <LabelCalendar label="To" />
+            <LabelCalendar label="From" handleDate={setStartDate} />
+            <LabelCalendar label="To" handleDate={setEndDate} />
           </div>
           <Separator />
           {/* 마크다운 */}

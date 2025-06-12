@@ -19,9 +19,10 @@ import { useState } from "react";
 interface Props {
   label: string;
   readonly?: boolean;
+  handleDate: (date: Date) => void;
 }
 
-function LabelCalendar({ label, readonly }: Props) {
+function LabelCalendar({ label, readonly, handleDate }: Props) {
   const [date, setDate] = useState<Date>();
 
   return (
@@ -46,7 +47,10 @@ function LabelCalendar({ label, readonly }: Props) {
             <Calendar
               mode="single"
               selected={date}
-              onSelect={setDate}
+              onSelect={(date) => {
+                setDate(date);
+                if (date) handleDate(date);
+              }}
               initialFocus
             />
           </PopoverContent>
