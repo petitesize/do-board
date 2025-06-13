@@ -119,6 +119,13 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+
+    -ms-overflow-style: none; /* IE */
+    scrollbar-width: none; /* 파이어폭스 */
+    /* 크롬, 사파리, 오페라, 엣지 동작 */
+  }
+  ::-webkit-scrollbar {
+    display: none;
   }
   body {
     @apply bg-background text-foreground;

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Noto_Sans_KR } from "next/font/google";
 // 전역 CSS
 import "@/styles/globals.css";
 import SideNavigation from "@/components/common/navigation/SideNavigation";
 import { Toaster } from "@/components/ui/sonner";
 
-const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
+const NOTO_SANS_KR = Noto_Sans_KR({ subsets: ["latin"] });
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
 //   subsets: ["latin"],
@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${roboto.className} antialiased`}>
+      <body className={`${NOTO_SANS_KR.className} antialiased`}>
         <SideNavigation />
         {children}
         <Toaster position="top-center" />

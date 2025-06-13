@@ -15,6 +15,7 @@ import { toast } from "sonner";
 // CSS
 import styles from "./page.module.scss";
 import { supabase } from "@/utils/supabase";
+import { ChevronLeft } from "lucide-react";
 // Supabase 컬럼
 export interface Todo {
   id: number;
@@ -109,12 +110,22 @@ function Page() {
     }
   };
 
+  const onSave = () => {};
+
   useEffect(() => {
     getData();
   }, []);
 
   return (
     <div className={styles.container}>
+      <div className="absolute top-6 left-7 flex items-center gap-2">
+        <Button variant={"outline"} size={"icon"} onClick={() => router.back()}>
+          <ChevronLeft />
+        </Button>
+        <Button variant={"outline"} onClick={onSave}>
+          저장
+        </Button>
+      </div>
       <header className={styles.container__header}>
         <div className={styles.container__header__contents}>
           <input
@@ -155,7 +166,7 @@ function Page() {
               <span className={styles.subTitle}>
                 Click the button and start flashing!
               </span>
-              <button className={styles.button}>
+              <button className={styles.button} onClick={createBoard}>
                 <Image
                   src="/assets/image/round-button.svg"
                   alt="round-button"

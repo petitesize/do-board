@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
+import { SearchBar } from "@/components/ui/search-bar";
 
 function SideNavigation() {
   const router = useRouter();
@@ -17,14 +18,12 @@ function SideNavigation() {
   const [todos, setTodos] = useState<any>([]);
 
   const onCreate = async () => {
-    console.log("함수 호출");
-
     // Supabase 데이터베이스 row 생성
     const { error, status } = await supabase.from("todos").insert([
       {
         title: "",
-        start_date: "",
-        end_date: "",
+        start_date: new Date(),
+        end_date: new Date(),
         contents: [],
       },
     ]);
@@ -37,7 +36,13 @@ function SideNavigation() {
       toast.message("페이지 생성 완료!", {
         description: "새로운 투두리스트가 생성되었습니다.",
       });
-      router.push("/create");
+      const { data } = await supabase.from("todos").select("*");
+      if (data) {
+        // 최근 생성된 = 가장 마지막 요소에 라우팅
+        router.push(`/create/${data[data?.length - 1].id}`);
+        // 목록 갱신
+        getTodos();
+      }
     }
   };
 
@@ -62,19 +67,12 @@ function SideNavigation() {
     <div className={styles.container}>
       {/* 검색창 */}
       <div className={styles.container__searchBox}>
-        <Input
-          type="text"
-          placeholder="검색어를 입력해주세요."
-          className="focus-visible:ring-0"
-        />
-        <Button variant={"outline"} size="icon">
-          <Search className="w-4 h-4" />
-        </Button>
+        <SearchBar placeholder="검색어를 입력해주세요" />
       </div>
       <div className={styles.container__buttonBox}>
         <Button
           variant={"outline"}
-          className="w-full text-rose-500 border-rose-400 hover:bg-rose-50 hover:text-rose-500"
+          className="w-full cursor-pointer text-rose-500 border-rose-400 hover:bg-rose-50 hover:text-rose-500"
           onClick={onCreate}
         >
           Add New Page
