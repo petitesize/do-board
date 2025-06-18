@@ -23,13 +23,13 @@ interface Props {
 }
 
 function LabelCalendar({ label, readonly, handleDate }: Props) {
-  const [date, setDate] = useState<Date>();
-
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(new Date());
   return (
     <div className={styles.container}>
       <span className={styles.container__label}>{label}</span>
       {/* ShadCn UI - Calendar */}
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
@@ -39,7 +39,7 @@ function LabelCalendar({ label, readonly, handleDate }: Props) {
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, "PPP") : <span>Pick a date</span>}
+            {date ? date?.toLocaleDateString() : <span>Pick a date</span>}
           </Button>
         </PopoverTrigger>
         {!readonly && (
@@ -48,8 +48,9 @@ function LabelCalendar({ label, readonly, handleDate }: Props) {
               mode="single"
               selected={date}
               onSelect={(date) => {
-                setDate(date);
                 if (date) handleDate(date);
+                setDate(date);
+                setOpen(false);
               }}
               initialFocus
             />

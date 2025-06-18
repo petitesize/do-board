@@ -10,12 +10,15 @@ import MarkdownDialog from "../dialog/MarkdownDialog";
 import { BoardContent, Todo } from "@/app/create/[id]/page";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import MDEditor from "@uiw/react-md-editor";
+import { Card } from "@/components/ui/card";
 
 interface Props {
   data: BoardContent;
+  handleBoards: (data: Todo) => void;
 }
 
-function BasicBoard({ data }: Props) {
+function BasicBoard({ data, handleBoards }: Props) {
   const pathname = usePathname();
 
   const handleDelete = async (id: string | number) => {
@@ -48,7 +51,23 @@ function BasicBoard({ data }: Props) {
             toast.message("삭제가 완료되었었습니다.", {
               description: "보드가 올바르게 삭제되었습니다.",
             });
+
+            // 삭제 후 렌더링
+            getData();
           }
+        }
+      });
+    }
+  };
+
+  // Supabase에 기존에 생성된 보드가 있는지 확인
+  const getData = async () => {
+    const { data: todos } = await supabase.from("todos").select("*");
+
+    if (todos !== null) {
+      todos.forEach((todo: Todo) => {
+        if (todo.id === Number(pathname.split("/")[2])) {
+          handleBoards(todo);
         }
       });
     }
@@ -119,6 +138,11 @@ function BasicBoard({ data }: Props) {
           </Button>
         </div>
       </div>
+      {data.content && (
+        <Card className="w-full p-4 mb-3">
+          <MDEditor value={data.content} height={100 + "%"} />
+        </Card>
+      )}
       <div className={styles.container__footer}>
         <MarkdownDialog data={data} />
       </div>

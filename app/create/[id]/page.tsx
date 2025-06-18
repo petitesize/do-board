@@ -179,7 +179,13 @@ function Page() {
         ) : (
           <div className="flex flex-col items-center justify-start w-full h-full gap-4">
             {boards?.contents.map((board: BoardContent) => {
-              return <BasicBoard key={board.boardId} data={board} />;
+              return (
+                <BasicBoard
+                  key={board.boardId}
+                  data={board}
+                  handleBoards={setBoards}
+                />
+              );
             })}
           </div>
         )}
