@@ -12,6 +12,9 @@ import BasicBoard from "@/components/common/board/BasicBoard";
 // Shadcn UI
 
 import { toast } from "sonner";
+import { useAtom } from "jotai";
+import { sidebarStateAtom } from "@/store";
+
 // CSS
 import styles from "./page.module.scss";
 import { supabase } from "@/utils/supabase";
@@ -38,6 +41,8 @@ function Page() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const [sidebarState, setSidebarState] = useAtom(sidebarStateAtom);
+  const [title, setTitle] = useState<string>("");
   const [boards, setBoards] = useState<Todo>();
   const [startDate, setStartDate] = useState<string | Date | undefined>(
     new Date()
@@ -105,12 +110,35 @@ function Page() {
       todos.forEach((todo: Todo) => {
         if (todo.id === Number(pathname.split("/")[2])) {
           setBoards(todo);
+          setTitle(todo.title);
         }
       });
     }
   };
 
-  const onSave = () => {};
+  const onSave = async () => {
+    const { data, error, status } = await supabase
+      .from("todos")
+      .update({
+        title: title,
+      })
+      .eq("id", pathname.split("/")[2]);
+
+    if (error) {
+      toast.message("에러가 발생했습니다.", {
+        description: "콘솔 창에 출력된 에러를 확인해주세요.",
+      });
+    }
+
+    if (status === 204) {
+      toast.message("수정 완료!", {
+        description: "작성한 게시물이 올바르게 저장되었습니다.",
+      });
+      getData();
+      // 상태 변경  (onSave가 호출될 때 상태 변경)
+      setSidebarState("updated");
+    }
+  };
 
   useEffect(() => {
     getData();
@@ -132,6 +160,8 @@ function Page() {
             type="text"
             placeholder="Enter Title Here"
             className={styles.input}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <div className={styles.progressBar}>
             <span className={styles.progressBar__status}>0/10 completed</span>

@@ -10,10 +10,14 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
+import { useAtom } from "jotai";
+import { sidebarStateAtom } from "@/store";
+
 import { SearchBar } from "@/components/ui/search-bar";
 
 function SideNavigation() {
   const router = useRouter();
+  const [sidebarState, setSidebarState] = useAtom(sidebarStateAtom);
   //   타입 임시지정 수정필수
   const [todos, setTodos] = useState<any>([]);
 
@@ -61,7 +65,7 @@ function SideNavigation() {
 
   useEffect(() => {
     getTodos();
-  }, [todos]);
+  }, [sidebarState]);
 
   return (
     <div className={styles.container}>

@@ -62,15 +62,26 @@ function BasicBoard({ data, handleBoards }: Props) {
 
   // Supabase에 기존에 생성된 보드가 있는지 확인
   const getData = async () => {
-    const { data: todos } = await supabase.from("todos").select("*");
+    const { data: todos, error } = await supabase.from("todos").select("*");
 
-    if (todos !== null) {
-      todos.forEach((todo: Todo) => {
-        if (todo.id === Number(pathname.split("/")[2])) {
-          handleBoards(todo);
-        }
+    if (error) {
+      toast.message("데이터 로드 실패!", {
+        description: "데이터를 불러오는 중 오류가 발생했습니다.",
       });
+      return;
     }
+
+    if (todos === null || todos.length === 0) {
+      toast.message("조회 가능한 데이터가 없습니다.", {
+        description: "조회 가능한 데이터가 없습니다.",
+      });
+      return;
+    }
+    todos.forEach((todo: Todo) => {
+      if (todo.id === Number(pathname.split("/")[2])) {
+        handleBoards(todo);
+      }
+    });
   };
 
   return (
@@ -144,7 +155,7 @@ function BasicBoard({ data, handleBoards }: Props) {
         </Card>
       )}
       <div className={styles.container__footer}>
-        <MarkdownDialog data={data} />
+        <MarkdownDialog data={data} updateBoards={getData} />
       </div>
     </div>
   );

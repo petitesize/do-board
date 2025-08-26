@@ -26,9 +26,10 @@ import { BoardContent, Todo } from "@/app/create/[id]/page";
 
 interface Props {
   data: BoardContent;
+  updateBoards: () => void;
 }
 
-function MarkdownDialog({ data }: Props) {
+function MarkdownDialog({ data, updateBoards }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
@@ -60,13 +61,7 @@ function MarkdownDialog({ data }: Props) {
                 el.title = title;
                 el.startDate = startDate;
                 el.endDate = endDate;
-              } else {
-                el.content = el.content;
-                el.title = el.title;
-                el.startDate = el.startDate;
-                el.endDate = el.endDate;
-              }
-              console.log(el);
+              } else return;
             });
             // Supabase 데이터베이스에 연동
             const { data, error, status } = await supabase
@@ -88,6 +83,7 @@ function MarkdownDialog({ data }: Props) {
             }
             //   등록 후 초기화
             setOpen(false);
+            updateBoards();
           }
         });
       } else {
