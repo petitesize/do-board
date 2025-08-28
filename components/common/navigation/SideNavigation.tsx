@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button/button";
 import { Dot, Search } from "lucide-react";
 // CSS
-import styles from "./SideNavigation.module.scss";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
@@ -20,7 +19,7 @@ function SideNavigation() {
   //   타입 임시지정 수정필수
   const [todos, setTodos] = useState<any>([]);
 
-  const onCreate = async () => {
+  const handleCreateTask = async () => {
     // Supabase 데이터베이스 row 생성
     const { error, status } = await supabase.from("todos").insert([
       {
@@ -67,41 +66,32 @@ function SideNavigation() {
   }, [sidebarState]);
 
   return (
-    <div className={styles.container}>
-      {/* 검색창 */}
-      <div className={styles.container__searchBox}>
-        <SearchBar placeholder="검색어를 입력해주세요" />
-      </div>
-      <div className={styles.container__buttonBox}>
+    <aside className="page__aside">
+      <div className="flex-col flex h-full gap-3">
+        {/* 검색창 UI */}
+        <SearchBar placeholder="검색어를 입력하세요." />
+        {/* Add New Page 버튼 UI */}
         <Button
-          variant={"outline"}
-          className="w-full cursor-pointer text-rose-500 border-rose-400 hover:bg-rose-50 hover:text-rose-500"
-          onClick={onCreate}
+          className="text-[#e79057] bg-white border border-[#e79057] hover:bg-[#fff9f5]"
+          onClick={handleCreateTask}
         >
           Add New Page
         </Button>
-      </div>
-      <div className={styles.container__todos}>
-        <span className={styles.container__todos__label}>Your To Do</span>
-        {/* Is Supabase Todos */}
-        <div className={styles.container__todos__list}>
-          {todos &&
-            todos.map((todo: any) => {
-              return (
-                <div
-                  className="flex items-center py-2 bg-[#f5f5f4] rounded-sm cursor-pointer"
-                  key={todo.id}
-                >
-                  <Dot className="mr-1 text-green-400" />
-                  <span className="text-sm">
-                    {todo.title === "" ? "제목 없음" : todo.title}
-                  </span>
-                </div>
-              );
-            })}
+        {/* Task 목록 UI */}
+        <div className="flex flex-col mt-4 gap-2">
+          <small className="text-sm font-medium leading-none text-[#a6a6a6]">
+            <span className="text-neutral-700">MY TASK</span>
+          </small>
+          <ul className="flex flex-col">
+            {/* Supabase DB에 데이터가 없을 경우 */}
+            <li className="bg-[#f5f5f5] min-h-9 flex items-center gap-2 py-2 px-[10px] rounded-sm text-sm text-neutral-400">
+              <div className="h-[6px] w-[6px] rounded-full bg-neutral-400"></div>
+              등록된 Task가 없습니다.
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
 
