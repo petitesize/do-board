@@ -9,20 +9,19 @@ import MDEditor from "@uiw/react-md-editor";
 import {
   Dialog,
   DialogContent,
-  //   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
+  Checkbox,
+  Separator,
+  Button,
+} from "@/components/ui";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { toast } from "sonner";
 // CSS
 import styles from "./MarkdownDialog.module.scss";
-import { BoardContent, Todo } from "@/app/create/[id]/page";
+import { BoardContent, Todo } from "@/app/task/[id]/page";
 
 interface Props {
   data: BoardContent;

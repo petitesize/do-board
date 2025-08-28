@@ -4,13 +4,13 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button/button";
+import { Calendar } from "@/components/ui/calendar/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/ui/popover/popover";
 // CSS
 import styles from "./LabelCalendar.module.scss";
 import { useState } from "react";
@@ -19,10 +19,9 @@ import { useState } from "react";
 interface Props {
   label: string;
   readonly?: boolean;
-  handleDate: (date: Date) => void;
 }
 
-function LabelCalendar({ label, readonly, handleDate }: Props) {
+function LabelCalendar({ label, readonly }: Props) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(new Date());
   return (
@@ -48,7 +47,6 @@ function LabelCalendar({ label, readonly, handleDate }: Props) {
               mode="single"
               selected={date}
               onSelect={(date) => {
-                if (date) handleDate(date);
                 setDate(date);
                 setOpen(false);
               }}

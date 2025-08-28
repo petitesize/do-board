@@ -1,17 +1,17 @@
 import { supabase } from "@/utils/supabase";
 import { usePathname } from "next/navigation";
 // Shadcn UI
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox/checkbox";
 // CSS
 import styles from "./BasicBoard.module.scss";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { ChevronUp } from "lucide-react";
 import MarkdownDialog from "../dialog/MarkdownDialog";
-import { BoardContent, Todo } from "@/app/create/[id]/page";
-import { Input } from "@/components/ui/input";
+import { BoardContent, Todo } from "@/app/task/[id]/page";
+import { Input } from "@/components/ui/input/input";
 import { toast } from "sonner";
 import MDEditor from "@uiw/react-md-editor";
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui/card/card";
 
 interface Props {
   data: BoardContent;

@@ -2,18 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 // Shadcn UI
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { Dot, Search } from "lucide-react";
 // CSS
 import styles from "./SideNavigation.module.scss";
-import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { sidebarStateAtom } from "@/store";
 
-import { SearchBar } from "@/components/ui/search-bar";
+import { SearchBar } from "@/components/ui/search-bar/search-bar";
 
 function SideNavigation() {
   const router = useRouter();
