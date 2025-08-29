@@ -16,7 +16,7 @@ import { sidebarStateAtom } from "@/store";
 
 // CSS
 import styles from "./page.module.scss";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase/client";
 import { ChevronLeft } from "lucide-react";
 // Supabase 컬럼
 export interface Todo {

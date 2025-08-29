@@ -1,69 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useCreateTask } from "@/app/hooks/apis";
 // Shadcn UI
-import { Button } from "@/components/ui/button/button";
-import { Dot, Search } from "lucide-react";
-// CSS
-import { useRouter } from "next/navigation";
-import { supabase } from "@/utils/supabase";
-import { toast } from "sonner";
-import { useAtom } from "jotai";
-import { sidebarStateAtom } from "@/store";
-
-import { SearchBar } from "@/components/ui/search-bar/search-bar";
+import { Button, SearchBar } from "@/components/ui";
 
 function SideNavigation() {
-  const router = useRouter();
-  const [sidebarState, setSidebarState] = useAtom(sidebarStateAtom);
-  //   타입 임시지정 수정필수
-  const [todos, setTodos] = useState<any>([]);
-
-  const handleCreateTask = async () => {
-    // Supabase 데이터베이스 row 생성
-    const { error, status } = await supabase.from("todos").insert([
-      {
-        title: "",
-        start_date: new Date(),
-        end_date: new Date(),
-        contents: [],
-      },
-    ]);
-
-    if (error) {
-      console.error(error);
-    }
-
-    if (status === 201) {
-      toast.message("페이지 생성 완료!", {
-        description: "새로운 투두리스트가 생성되었습니다.",
-      });
-      const { data } = await supabase.from("todos").select("*");
-      if (data) {
-        // 최근 생성된 = 가장 마지막 요소에 라우팅
-        router.push(`/create/${data[data?.length - 1].id}`);
-        // 목록 갱신
-        getTodos();
-      }
-    }
-  };
-
-  //   Supabase에 기존에 생성된 페이지가 있는지 없는지 체크
-  const getTodos = async () => {
-    const {
-      data: todos,
-      error,
-      status,
-    } = await supabase.from("todos").select("*");
-
-    if (status === 200) {
-      setTodos(todos);
-    }
-  };
-
-  useEffect(() => {
-    getTodos();
-  }, [sidebarState]);
+  const handleCreateTask = useCreateTask();
 
   return (
     <aside className="page__aside">
