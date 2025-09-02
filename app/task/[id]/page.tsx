@@ -10,7 +10,7 @@ import LabelCalendar from "@/components/common/calendar/LabelCalendar";
 import { BoardCard } from "@/components/common";
 // Shadcn UI
 import { useAtom } from "jotai";
-import { sidebarStateAtom } from "@/store";
+import { todosAtom } from "@/store/atoms";
 // CSS
 import styles from "./page.module.scss";
 import { ChevronLeft } from "lucide-react";
@@ -23,7 +23,6 @@ function TaskPage() {
   const { id } = useParams();
   const createBoard = useCreateBoard();
 
-  const [sidebarState, setSidebarState] = useAtom(sidebarStateAtom);
   const [title, setTitle] = useState<string>("");
   const [boards, setBoards] = useState<Board[]>([]);
   const [startDate, setStartDate] = useState<string | Date | undefined>(
@@ -129,7 +128,7 @@ function TaskPage() {
           <div className={styles.body__isData}>
             {/* Add New Board 버튼 클릭으로 인한 Board 데이터가 있을 경우 */}
             {boards.map((board: Board) => {
-              return <BoardCard key={board.id} />;
+              return <BoardCard key={board.id} board={board} />;
             })}
           </div>
         ) : (
