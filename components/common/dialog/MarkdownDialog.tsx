@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 // Components
 import LabelCalendar from "../calendar/LabelCalendar";
@@ -29,6 +29,7 @@ interface Props {
 function MarkdownDialog({ board, children }: Props) {
   const { id } = useParams();
   const updateBoard = useCreateBoard();
+
   // 컴포넌트 상태 값
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);

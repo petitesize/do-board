@@ -1,9 +1,9 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
-import { useCreateBoard } from "@/app/hooks/apis";
+import { useCreateBoard, useGetTodoById } from "@/app/hooks/apis";
 // Components
 import { Progress, Button } from "@/components/ui";
 import LabelCalendar from "@/components/common/calendar/LabelCalendar";
@@ -22,6 +22,7 @@ function TaskPage() {
   const router = useRouter();
   const { id } = useParams();
   const createBoard = useCreateBoard();
+  const { todo } = useGetTodoById(Number(id));
 
   const [title, setTitle] = useState<string>("");
   const [boards, setBoards] = useState<Board[]>([]);
@@ -32,6 +33,14 @@ function TaskPage() {
 
   // ==================================================================================
 
+  useEffect(() => {
+    if (todo) {
+      setTitle(todo.title || "");
+      setStartDate(todo.start_date ? new Date(todo.start_date) : new Date());
+      setEndDate(todo.end_date ? new Date(todo.end_date) : new Date());
+      setBoards(todo.contents);
+    }
+  }, [todo]);
   // ADD NEW BOARD 버튼 핸들러
   const handleAddBoard = () => {
     const newBoard: Board = {
