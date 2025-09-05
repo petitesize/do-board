@@ -1,4 +1,4 @@
-export interface Task {
+export interface Todo {
   id: number;
   title: string;
   start_date: Date | undefined;

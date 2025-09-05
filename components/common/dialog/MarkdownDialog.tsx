@@ -20,6 +20,8 @@ import { DialogClose, DialogDescription } from "@radix-ui/react-dialog";
 import { toast } from "sonner";
 import { Board } from "@/types";
 import { useCreateBoard } from "@/app/hooks/apis";
+import { useAtomValue } from "jotai";
+import { todoAtom } from "@/store/atoms";
 
 interface Props {
   board: Board;
@@ -29,6 +31,7 @@ interface Props {
 function MarkdownDialog({ board, children }: Props) {
   const { id } = useParams();
   const updateBoard = useCreateBoard();
+  const todo = useAtomValue(todoAtom);
 
   // 컴포넌트 상태 값
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
@@ -41,12 +44,16 @@ function MarkdownDialog({ board, children }: Props) {
   );
 
   const initState = () => {
-    setIsCompleted(false);
-    setTitle("");
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setContent("**Hello, World!**");
+    setIsCompleted(board.isCompleted || false);
+    setTitle(board.title || "");
+    setStartDate(board.startDate ? new Date(board.startDate) : undefined);
+    setEndDate(board.endDate ? new Date(board.endDate) : undefined);
+    setContent(board.content || "**Hello, World!**");
   };
+
+  useEffect(() => {
+    initState();
+  }, [board]);
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
@@ -63,13 +70,13 @@ function MarkdownDialog({ board, children }: Props) {
 
     try {
       // 선택한 todo를 찾고, 수정된 값으로 업데이트
-      const newBoards = todo.boards.map((board: Board) => {
+      const newBoards = todo?.contents.map((board: Board) => {
         if (board.id === boardId) {
           return { ...board, isCompleted, title, startDate, endDate, content };
         }
         return board;
       });
-      await updateBoard(Number(id), "todos", newBoards);
+      await updateBoard(Number(id), "contents", newBoards);
       handleCloseDialog();
     } catch (error) {
       toast.error("네트워크 오류", {
@@ -86,12 +93,19 @@ function MarkdownDialog({ board, children }: Props) {
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center justify-start gap-2">
-              <Checkbox className="w-5 h-5 min-w-5" checked={true} />
+              <Checkbox
+                className="w-5 h-5 min-w-5"
+                checked={isCompleted}
+                onCheckedChange={(checked) => {
+                  if (typeof checked === "boolean") setIsCompleted(checked);
+                }}
+              />
               <input
                 type="text"
                 placeholder="게시물의 제목을 입력하세요."
                 className="w-full text-xl outline-none bg-transparent"
                 onChange={(e) => setTitle(e.target.value)}
+                value={title}
               />
             </div>
           </DialogTitle>
@@ -101,12 +115,16 @@ function MarkdownDialog({ board, children }: Props) {
         </DialogHeader>
         {/* 캘린더 박스 */}
         <div className="flex items-center gap-5">
-          <LabelCalendar label="From" />
-          <LabelCalendar label="To" />
+          <LabelCalendar
+            label="From"
+            value={startDate}
+            onChange={setStartDate}
+          />
+          <LabelCalendar label="To" value={endDate} onChange={setEndDate} />
         </div>
         <Separator />
         {/* 마크다운 */}
-        <MDEditor height={320 + "px"} onChange={setContent} />
+        <MDEditor height={320 + "px"} value={content} onChange={setContent} />
         <DialogFooter>
           <DialogClose asChild>
             <Button variant={"outline"}>취소</Button>

@@ -26,10 +26,8 @@ function TaskPage() {
 
   const [title, setTitle] = useState<string>("");
   const [boards, setBoards] = useState<Board[]>([]);
-  const [startDate, setStartDate] = useState<string | Date | undefined>(
-    new Date()
-  );
-  const [endDate, setEndDate] = useState<string | Date | undefined>(new Date());
+  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
 
   // ==================================================================================
 
@@ -121,8 +119,8 @@ function TaskPage() {
         {/* 캘린터 + Add New Board 버튼 섹션 */}
         <div className={styles.header__bottom}>
           <div className="flex items-center gap-5">
-            <LabelCalendar label="From" />
-            <LabelCalendar label="To" />
+            <LabelCalendar label="From" value={startDate} />
+            <LabelCalendar label="To" value={endDate} />
           </div>
           <Button
             onClick={handleAddBoard}

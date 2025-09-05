@@ -3,7 +3,7 @@
 import { useCreateTask, useGetTodos } from "@/app/hooks/apis";
 // Shadcn UI
 import { Button, SearchBar } from "@/components/ui";
-import { Task } from "@/types";
+import { Todo } from "@/types";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -42,7 +42,7 @@ function SideNavigation() {
                 등록된 Task가 없습니다.
               </li>
             ) : (
-              todos.map((todo: Task) => {
+              todos.map((todo: Todo) => {
                 return (
                   <li
                     key={todo.id}

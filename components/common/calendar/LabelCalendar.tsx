@@ -1,6 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
+import { ko } from "date-fns/locale";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -19,11 +20,13 @@ import { useState } from "react";
 interface Props {
   label: string;
   readonly?: boolean;
+  value: Date | undefined;
+  onChange?: (date: Date | undefined) => void;
 }
 
-function LabelCalendar({ label, readonly }: Props) {
+function LabelCalendar({ label, readonly, value, onChange }: Props) {
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  // const [date, setDate] = useState<Date | undefined>(new Date());
   return (
     <div className={styles.container}>
       <span className={styles.container__label}>{label}</span>
@@ -34,22 +37,28 @@ function LabelCalendar({ label, readonly }: Props) {
             variant={"outline"}
             className={cn(
               "w-[200px] justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              !value && "text-muted-foreground"
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? date?.toLocaleDateString() : <span>Pick a date</span>}
+            {/* {value ? value?.toLocaleDateString() : <span>Pick a date</span>} */}
+            {value ? (
+              format(value, "yyyy. MM. dd", { locale: ko })
+            ) : (
+              <span>Pick a date</span>
+            )}
           </Button>
         </PopoverTrigger>
         {!readonly && (
           <PopoverContent className="w-auto p-0">
             <Calendar
               mode="single"
-              selected={date}
-              onSelect={(date) => {
-                setDate(date);
-                setOpen(false);
-              }}
+              selected={value}
+              // onSelect={(date) => {
+              //   setDate(date);
+              //   setOpen(false);
+              // }}
+              onSelect={onChange}
               initialFocus
             />
           </PopoverContent>
