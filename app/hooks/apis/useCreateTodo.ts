@@ -4,9 +4,9 @@ import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-function useCreateTask() {
+function useCreateTodo() {
   const router = useRouter();
-  const createTask = async () => {
+  const createTodo = async () => {
     try {
       const { data, status, error } = await supabase
         .from("todos")
@@ -25,7 +25,7 @@ function useCreateTask() {
         toast.message("새로운 TASK가 생성되었습니다.", {
           description: "나만의 DO-BOARD를 생성해보세요!",
         });
-        router.push(`/task/${data[0].id}`);
+        router.push(`/todo/${data[0].id}`);
       }
 
       if (error) {
@@ -41,7 +41,7 @@ function useCreateTask() {
     }
   };
 
-  return createTask;
+  return createTodo;
 }
 
-export { useCreateTask };
+export { useCreateTodo };

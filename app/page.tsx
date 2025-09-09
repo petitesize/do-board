@@ -1,11 +1,11 @@
 "use client";
 
-import { useCreateTask } from "./hooks/apis";
+import { useCreateTodo } from "./hooks/apis";
 // Shadcn UI
 import { Button } from "@/components/ui/button/button";
 
 function InitPage() {
-  const handleCreateTask = useCreateTask();
+  const handleCreateTodo = useCreateTodo();
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
@@ -24,7 +24,7 @@ function InitPage() {
         {/* 페이지 추가 버튼 */}
         <Button
           className="text-[#E79057] bg-transparent border border-[#E79057] hover:bg-[#FFF9F5] w-[180px]"
-          onClick={handleCreateTask}
+          onClick={handleCreateTodo}
         >
           Add New Page
         </Button>

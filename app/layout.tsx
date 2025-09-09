@@ -4,7 +4,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import "@/styles/globals.css";
 import "@/styles/main.scss";
 
-import SideNavigation from "@/components/common/navigation/SideNavigation";
+import { SideNavigation } from "@/components/common";
 import { Toaster } from "@/components/ui";
 
 const NOTO_SANS_KR = Noto_Sans_KR({ subsets: ["latin"] });

@@ -33,3 +33,16 @@ export {
 } from "./card/card";
 export { Calendar, CalendarDayButton } from "./calendar/calendar";
 export { Button, buttonVariants } from "./button/button";
+export {
+  AlertDialog,
+  AlertDialogPortal,
+  AlertDialogOverlay,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "./dialog/alert-dialog";

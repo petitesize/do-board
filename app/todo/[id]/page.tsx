@@ -7,7 +7,7 @@ import { useCreateBoard, useGetTodoById } from "@/app/hooks/apis";
 // Components
 import { Progress, Button } from "@/components/ui";
 import LabelCalendar from "@/components/common/calendar/LabelCalendar";
-import { BoardCard } from "@/components/common";
+import { BoardCard, DeleteTodoPopup } from "@/components/common";
 // Shadcn UI
 import { useAtom } from "jotai";
 import { todosAtom } from "@/store/atoms";
@@ -94,9 +94,11 @@ function TaskPage() {
             <Button variant={"secondary"} onClick={handleSave}>
               저장
             </Button>
-            <Button className="text-rose-600 bg-red-50 hover:bg-rose-50 ">
-              삭제
-            </Button>
+            <DeleteTodoPopup>
+              <Button className="text-rose-600 bg-red-50 hover:bg-rose-50 ">
+                삭제
+              </Button>
+            </DeleteTodoPopup>
           </div>
         </div>
         <div className={styles.header__top}>

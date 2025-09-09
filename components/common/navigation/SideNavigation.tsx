@@ -1,6 +1,6 @@
 "use client";
 
-import { useCreateTask, useGetTodos } from "@/app/hooks/apis";
+import { useCreateTodo, useGetTodos } from "@/app/hooks/apis";
 // Shadcn UI
 import { Button, SearchBar } from "@/components/ui";
 import { Todo } from "@/types";
@@ -16,7 +16,7 @@ function SideNavigation() {
     getTodos();
   }, [id]);
 
-  const handleCreateTask = useCreateTask();
+  const handleCreateTodo = useCreateTodo();
 
   return (
     <aside className="page__aside">
@@ -26,14 +26,14 @@ function SideNavigation() {
         {/* Add New Page 버튼 UI */}
         <Button
           className="text-[#e79057] bg-white border border-[#e79057] hover:bg-[#fff9f5]"
-          onClick={handleCreateTask}
+          onClick={handleCreateTodo}
         >
           Add New Page
         </Button>
         {/* Task 목록 UI */}
         <div className="flex flex-col mt-4 gap-2">
           <small className="text-sm font-medium leading-none text-[#a6a6a6]">
-            <span className="text-neutral-700">MY TASK</span>
+            <span className="text-neutral-700">MY TODO</span>
           </small>
           <ul className="flex flex-col">
             {todos.length === 0 ? (
@@ -46,7 +46,7 @@ function SideNavigation() {
                 return (
                   <li
                     key={todo.id}
-                    onClick={() => router.push(`/task/${todo.id}`)}
+                    onClick={() => router.push(`/todo/${todo.id}`)}
                     className={`${
                       todo.id === Number(id) && "bg-[#f5f5f5]"
                     } min-h-9 flex items-center gap-2 py-2 px-[10px] rounded-sm text-sm cursor-pointer`}
@@ -76,4 +76,4 @@ function SideNavigation() {
   );
 }
 
-export default SideNavigation;
+export { SideNavigation };
