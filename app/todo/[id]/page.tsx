@@ -3,32 +3,35 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
-import { useCreateBoard, useGetTodoById } from "@/app/hooks/apis";
+import { useCreateBoard, useGetTodoById, useGetTodos } from "@/app/hooks/apis";
 // Components
 import { Progress, Button } from "@/components/ui";
 import LabelCalendar from "@/components/common/calendar/LabelCalendar";
 import { BoardCard, DeleteTodoPopup } from "@/components/common";
-// Shadcn UI
-import { useAtom } from "jotai";
-import { todosAtom } from "@/store/atoms";
+
 // CSS
 import styles from "./page.module.scss";
 import { ChevronLeft } from "lucide-react";
 // Types
 import { Board } from "@/types";
 import Image from "next/image";
+import { toast } from "sonner";
+import { supabase } from "@/utils/supabase/client";
 
 function TaskPage() {
   const router = useRouter();
   const { id } = useParams();
   const createBoard = useCreateBoard();
   const { todo } = useGetTodoById(Number(id));
+  const { getTodos } = useGetTodos();
 
   const [title, setTitle] = useState<string>("");
   const [boards, setBoards] = useState<Board[]>([]);
-  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
-  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
+  const formattedDate = (date: Date) =>
+    new Date(date).toLocaleDateString("en-CA");
   // ==================================================================================
 
   useEffect(() => {
@@ -39,6 +42,7 @@ function TaskPage() {
       setBoards(todo.contents);
     }
   }, [todo]);
+
   // ADD NEW BOARD 버튼 핸들러
   const handleAddBoard = () => {
     const newBoard: Board = {
@@ -58,25 +62,42 @@ function TaskPage() {
   // ==================================================================================
 
   const handleSave = async () => {
-    // const { data, error, status } = await supabase
-    //   .from("todos")
-    //   .update({
-    //     title: title,
-    //   })
-    //   .eq("id", pathname.split("/")[2]);
-    // if (error) {
-    //   toast.message("에러가 발생했습니다.", {
-    //     description: "콘솔 창에 출력된 에러를 확인해주세요.",
-    //   });
-    // }
-    // if (status === 204) {
-    //   toast.message("수정 완료!", {
-    //     description: "작성한 게시물이 올바르게 저장되었습니다.",
-    //   });
-    //   getData();
-    //   // 상태 변경  (onSave가 호출될 때 상태 변경)
-    //   setSidebarState("updated");
-    // }
+    if (!title || !startDate || !endDate) {
+      toast.error("기입되지 않은 값이 있습니다.", {
+        description: `제목, 시작일, 종료일은 필수 값입니다.`,
+      });
+      return;
+    }
+
+    try {
+      const { data, status, error } = await supabase
+        .from("todos")
+        .update({
+          title,
+          start_date: formattedDate(startDate ?? new Date()),
+          end_date: formattedDate(endDate ?? new Date()),
+        })
+        .eq("id", id)
+        .select(); // 반환되는 값이 있으면 select를 해주면 data 에 반환값이 저장
+
+      if (data && status === 200) {
+        // 테이블에 row 데이터 정상 생성
+        toast.message("TODO 저장을 완료하였습니다.");
+        // 상태값 업데이트: SideNavigation update
+        getTodos();
+      }
+
+      if (error) {
+        toast.error("에러가 발생했습니다.", {
+          description: `Supabase Error: ${error.message || `알 수 없는 오류`}`,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("네트워크 오류", {
+        description: `서버와 연결할 수 없습니다. 다시 시도해주세요!`,
+      });
+    }
   };
 
   return (
@@ -121,8 +142,12 @@ function TaskPage() {
         {/* 캘린터 + Add New Board 버튼 섹션 */}
         <div className={styles.header__bottom}>
           <div className="flex items-center gap-5">
-            <LabelCalendar label="From" value={startDate} />
-            <LabelCalendar label="To" value={endDate} />
+            <LabelCalendar
+              label="From"
+              value={startDate}
+              onChange={setStartDate}
+            />
+            <LabelCalendar label="To" value={endDate} onChange={setEndDate} />
           </div>
           <Button
             onClick={handleAddBoard}

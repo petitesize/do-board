@@ -1,18 +1,23 @@
+"use client";
 // Shadcn UI
 import { Checkbox, Button, Separator } from "@/components/ui";
 // CSS
 import { ChevronUp } from "lucide-react";
 import { Card } from "@/components/ui/card/card";
 import LabelCalendar from "../calendar/LabelCalendar";
-
 import { MarkdownDialog } from "@/components/common";
+
 import { Board } from "@/types";
+import { useDeleteBoard } from "@/app/hooks/apis";
+import { useParams } from "next/navigation";
 
 interface Props {
   board: Board;
 }
 
 function BoardCard({ board }: Props) {
+  const { id } = useParams();
+  const handleDeleteBoard = useDeleteBoard(Number(id), board.id);
   return (
     <Card className="w-full flex flex-col items-center p-5">
       {/* 게시물 카드 제목 영역 */}
@@ -35,8 +40,8 @@ function BoardCard({ board }: Props) {
       <div className="w-full flex items-center justify-between">
         {/* 캘린더 박스 */}
         <div className="flex items-center gap-5">
-          <LabelCalendar label="From" value={board.startDate} />
-          <LabelCalendar label="To" value={board.endDate} />
+          <LabelCalendar label="From" value={board.startDate} readonly={true} />
+          <LabelCalendar label="To" value={board.endDate} readonly={true} />
         </div>
         {/* 버튼 박스 */}
         <div className="flex items-center">
@@ -44,6 +49,7 @@ function BoardCard({ board }: Props) {
             Duplicate
           </Button>
           <Button
+            onClick={handleDeleteBoard}
             variant={"ghost"}
             className="font-normal text-rose-600 hover:text-rose-600 hover:bg-red-50"
           >
