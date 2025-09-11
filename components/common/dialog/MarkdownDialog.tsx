@@ -19,7 +19,7 @@ import {
 import { DialogClose, DialogDescription } from "@radix-ui/react-dialog";
 import { toast } from "sonner";
 import { Board } from "@/types";
-import { useCreateBoard } from "@/app/hooks/apis";
+import { useCreateBoard, useGetTodoById } from "@/app/hooks/apis";
 import { useAtomValue } from "jotai";
 import { todoAtom } from "@/store/atoms";
 
@@ -31,14 +31,15 @@ interface Props {
 function MarkdownDialog({ board, children }: Props) {
   const { id } = useParams();
   const updateBoard = useCreateBoard();
+  const { getTodoById } = useGetTodoById(Number(id));
   const todo = useAtomValue(todoAtom);
 
   // 컴포넌트 상태 값
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
-  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
-  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [content, setContent] = useState<string | undefined>(
     "**Hello, World!**"
   );
@@ -52,8 +53,8 @@ function MarkdownDialog({ board, children }: Props) {
   };
 
   useEffect(() => {
-    initState();
-  }, [board]);
+    if (isDialogOpen) initState();
+  }, [isDialogOpen]);
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
@@ -77,7 +78,9 @@ function MarkdownDialog({ board, children }: Props) {
         return board;
       });
       await updateBoard(Number(id), "contents", newBoards);
+
       handleCloseDialog();
+      getTodoById();
     } catch (error) {
       toast.error("네트워크 오류", {
         description: `서버와 연결할 수 없습니다. 다시 시도해주세요!`,

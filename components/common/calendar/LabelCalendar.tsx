@@ -31,7 +31,7 @@ function LabelCalendar({ label, readonly, value, onChange }: Props) {
     <div className={styles.container}>
       <span className={styles.container__label}>{label}</span>
       {/* ShadCn UI - Calendar */}
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen} modal>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
@@ -50,15 +50,15 @@ function LabelCalendar({ label, readonly, value, onChange }: Props) {
           </Button>
         </PopoverTrigger>
         {!readonly && (
-          <PopoverContent className="w-auto p-0">
+          <PopoverContent className="w-auto p-0 z-[1000]">
             <Calendar
               mode="single"
               selected={value}
-              // onSelect={(date) => {
-              //   setDate(date);
-              //   setOpen(false);
-              // }}
-              onSelect={onChange}
+              onSelect={(date) => {
+                onChange?.(date);
+                setOpen(false);
+              }}
+              // onSelect={onChange}
               initialFocus
             />
           </PopoverContent>
