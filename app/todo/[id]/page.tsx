@@ -29,6 +29,7 @@ function TaskPage() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [count, setCount] = useState<number>(0);
 
   const formattedDate = (date: Date) =>
     new Date(date).toLocaleDateString("en-CA");
@@ -100,6 +101,15 @@ function TaskPage() {
     }
   };
 
+  useEffect(() => {
+    if (todo?.contents) {
+      const compltedCount = todo.contents.filter(
+        (content: Board) => content.isCompleted
+      ).length;
+      setCount(compltedCount);
+    }
+  }, [todo?.contents]);
+
   return (
     <>
       <div className={styles.header}>
@@ -134,7 +144,7 @@ function TaskPage() {
           {/* 진행 상황 척도 그래프 섹션 */}
           <div className="flex items-center justify-start gap-4">
             <small className="text-sm font-medium leading-none text-[#6d6d6d]">
-              1/10 Completed
+              {count}/{todo?.contents.length} Completed
             </small>
             <Progress className="w-60 h-[10px]" value={33} />
           </div>
