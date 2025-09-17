@@ -48,7 +48,6 @@ function BoardCard({ board }: Props) {
 
     try {
       // 선택한 todo를 찾고, 수정된 값으로 업데이트
-
       const newBoards = todo?.contents.map((board: Board) => {
         if (board.id === boardId) {
           return { ...board, startDate, endDate };

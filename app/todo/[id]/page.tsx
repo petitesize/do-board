@@ -146,7 +146,14 @@ function TaskPage() {
             <small className="text-sm font-medium leading-none text-[#6d6d6d]">
               {count}/{todo?.contents.length} Completed
             </small>
-            <Progress className="w-60 h-[10px]" value={33} />
+            <Progress
+              className="w-60 h-[10px]"
+              value={
+                todo && todo.contents.length > 0
+                  ? (count / todo.contents.length) * 100
+                  : 0
+              }
+            />
           </div>
         </div>
         {/* 캘린터 + Add New Board 버튼 섹션 */}
